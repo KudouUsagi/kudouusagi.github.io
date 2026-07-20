@@ -355,42 +355,55 @@
         // =========================================================
         // ✨ DYNAMIC SIDEBAR LIST PARSING DATA ✨
         // =========================================================
-        const placeholderListData = [
-            {
-                title: "User Profile/Item 1",
-                description: "Sample description text block goes here inside quotes.",
-                count: 10,
-                metric: "$10.00",
-                reply: "Optional inline nested system reply text snippet."
-            },
-            {
-                title: "User Profile/Item 2",
-                description: "Another example item showing look and feel variations.",
-                count: 5,
-                metric: "$5.00",
-                reply: "" // Left blank deliberately to show conditional handling
-            }
-        ];
+const targetListContainer = document.getElementById('dynamic-list-target');
 
-        const targetListContainer = document.getElementById('dynamic-list-target');
+async function fetchKofiDonors() {
+    try {
+        // Fetching live public feed data via ko-fi.tools service
+        const response = await fetch('https://api.ko-fi.tools/api/feed/kudouusagi');
+        if (!response.ok) throw new Error('Network response was not ok');
         
-        placeholderListData.forEach(item => {
+        const data = await response.json();
+        
+        // Clear out any loading state or hardcoded items
+        targetListContainer.innerHTML = '';
+        
+        // Filter out items that aren't actual donations/memberships
+        const donations = data.filter(item => item.type === 'Donation' || item.type === 'Subscription');
+
+        if (donations.length === 0) {
+            targetListContainer.innerHTML = '<li>No recent donations found.</li>';
+            return;
+        }
+
+        donations.forEach(item => {
             let li = document.createElement('li');
             
-            let descHTML = item.description ? `<div class="item-description">"${item.description}"</div>` : '';
-            let replyHTML = item.reply ? `<div class="item-reply">↳ <strong>Response:</strong> ${item.reply}</div>` : '';
+            // Ko-fi tools returns fields like: adult_name, message, amount, currency, and note_from_creator
+            const donorName = item.adult_name || 'Anonymous Supporter';
+            const messageText = item.message ? `<div class="item-description">"${item.message}"</div>` : '';
+            const replyHTML = item.note_from_creator ? `<div class="item-reply">↳ <strong>Response:</strong> ${item.note_from_creator}</div>` : '';
+            const financialMetric = item.amount ? ` - ${item.currency}${item.amount}` : '';
             
             li.innerHTML = `
-                <span class="item-title">${item.title}</span>
-                ${descHTML}
+                <span class="item-title">☕ ${donorName}</span>
+                ${messageText}
                 <div class="item-meta highlight-meta">
-                    Metric Tally: ${item.count} - ${item.metric}
+                    Supported${financialMetric}
                 </div>
                 ${replyHTML}
             `;
             
             targetListContainer.appendChild(li);
         });
+    } catch (error) {
+        console.error('Error fetching Ko-fi donors:', error);
+        targetListContainer.innerHTML = '<li>Unable to load recent supporters.</li>';
+    }
+}
+
+// Call the function to populate the sidebar array on load
+fetchKofiDonors();
 
         // =========================================================
         // ✨ RANDOM BANNER / COVER GENERATOR EFFECT ✨
