@@ -314,7 +314,23 @@
         <aside class="sidebar">
 
             <!-- Your Original Glassy Expandable Button UI Component -->
-          <div class="custom-widget-container">2    <button class="kofi-toggle-btn" id="kofi-toggle">3        <div class="kofi-icon-group">4            <span>☕</span>5            <span>Support My Work</span>6        </div>7        <span class="toggle-arrow">▼</span>8    </button>9 10    <div class="kofi-panel-wrapper" id="kofi-panel">11        <iframe12            id="kofi-iframe"13            src="https://ko-fi.com/kudouusagi/?hidefeed=true&widget=true&embed=true&preview=true"14            title="kudouusagi">15        </iframe>16    </div>17</div>
+         <div class="custom-widget-container">
+    <button class="kofi-toggle-btn" id="kofi-toggle">
+        <div class="kofi-icon-group">
+            <span>☕</span>
+            <span>Support My Work</span>
+        </div>
+        <span class="toggle-arrow">▼</span>
+    </button>
+
+    <div class="kofi-panel-wrapper" id="kofi-panel">
+        <iframe
+            id="kofi-iframe"
+            src="https://ko-fi.com/kudouusagi/?hidefeed=true&widget=true&embed=true&preview=true"
+            title="kudouusagi">
+        </iframe>
+    </div>
+</div>
             <!-- Dynamic Stream / Activity List Container Card -->
             <div class="card sidebar-list-container" style="opacity: 1; transform: none;"> 
                 <h2>Recent Supporters</h2>
@@ -332,7 +348,13 @@
         // =========================================================
         // ✨ WIDGET TOGGLE LOGIC ✨
         // =========================================================
-       document.addEventListener("DOMContentLoaded", () => {2    const btn = document.getElementById("kofi-toggle");3    const panel = document.getElementById("kofi-panel");4 5    btn.addEventListener("click", () => {6        panel.classList.toggle("open");7        btn.classList.toggle("open");8    });9});
+       function toggleWidget() {
+    const panel = document.getElementById('kofi-panel');
+    const btn = document.getElementById('kofi-toggle');
+
+    panel.classList.toggle('open');
+    btn.classList.toggle('open');
+}
         // =========================================================
         // ✨ DYNAMIC SIDEBAR LIST PARSING DATA ✨
         // =========================================================
