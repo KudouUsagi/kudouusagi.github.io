@@ -260,6 +260,16 @@
         }
         .footer-link { color: #ffffff; text-decoration: none; font-weight: bold; transition: 0.3s; margin-left: 5px; border-bottom: 1px solid transparent; }
         .footer-link:hover { color: #cccccc; border-bottom: 1px solid #cccccc; }
+        
+        /* Forcefully hide the official Ko-fi floating action button asset */
+#kofi-widget-overlay, 
+.kofi-button-wrapper, 
+[id^="kofi-widget-overlay"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
     </style>
 </head>
 <body>
@@ -307,27 +317,21 @@
         </div>
 
         <!-- RIGHT SIDE: Sidebar -->
-   <aside class="sidebar">
+  <aside class="sidebar">
 
-    <!-- Official Ko-fi Widget Script Base (Initializes without the annoying floating chat ball) -->
+    <!-- Official Ko-fi Widget Script Base -->
     <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
     <script>
-        // Pre-initialize the overlay background settings without printing the floating ball asset
-        window.addEventListener('DOMContentLoaded', () => {
-            kofiWidgetOverlay.draw('kudouusagi', {
-                'type': 'floating-chat',
-                'floating-chat.donateButton.text': 'Support me',
-                'floating-chat.donateButton.background-color': '#7e57c2',
-                'floating-chat.donateButton.text-color': '#fff'
-            });
-            
-            // Hide the default floating widget bubble element so it doesn't clutter your layout
-            const kofiFloatingBtn = document.getElementById('kofi-widget-overlay');
-            if(kofiFloatingBtn) kofiFloatingBtn.style.display = 'none';
+        // Initialize the widget framework
+        kofiWidgetOverlay.draw('kudouusagi', {
+            'type': 'floating-chat',
+            'floating-chat.donateButton.text': 'Support me',
+            'floating-chat.donateButton.background-color': '#7e57c2',
+            'floating-chat.donateButton.text-color': '#fff'
         });
     </script>
 
-    <!-- Your Original Glassy Expandable Button Custom UI Component -->
+    <!-- Your Original Glassy Sidebar Button Component -->
     <div class="custom-widget-container">
         <button class="kofi-toggle-btn" id="kofi-toggle" onclick="toggleWidget()">
             <div class="kofi-icon-group">
@@ -352,64 +356,34 @@
     </div>
 
     <script>
-        // =========================================================
-        // ✨ WIDGET TOGGLE LOGIC ✨
-        // =========================================================
-    function toggleWidget() {
+// =========================================================
+// ✨ WIDGET TOGGLE LOGIC ✨
+// =========================================================
+function toggleWidget() {
     const btn = document.getElementById('kofi-toggle');
+    const kofiIframe = document.querySelector('iframe[src*="ko-fi.com"]');
     
-    // Check if the panel button is already opened 
+    if (!kofiIframe) {
+        console.error("Ko-fi widget hasn't loaded yet.");
+        return;
+    }
+
     if (btn.classList.contains('open')) {
         btn.classList.remove('open');
-        
-        // This targets the official tracking frame and mimics a close event click smoothly
-        const closeOverlayBtn = document.querySelector('.kofi-iframe-close-button') || 
-                                 document.querySelector('[id*="kofi-widget-overlay"] iframe');
-        
-        // Command the official widget to slide back closed securely
-        if(typeof kofiWidgetOverlay !== 'undefined') {
-            // Re-trigger close natively safely
-            const iframe = document.querySelector('.kofi-iframe-container iframe');
-            if(iframe) {
-                // Emulates a clean exit dismiss signal directly inside the widget tracking engine
-                window.parent.postMessage('kofi_widget_close', '*');
-            }
-        }
+        // Sends the official close signal directly into the secure Ko-fi frame execution engine
+        kofiIframe.contentWindow.postMessage(JSON.stringify({ method: 'close' }), '*');
+        kofiIframe.contentWindow.postMessage('kofi_widget_close', '*');
     } else {
         btn.classList.add('open');
+        // Force the iframe container wrapper to display block natively
+        const parentContainer = kofiIframe.parentElement;
+        if (parentContainer) parentContainer.style.display = 'block';
         
-        // Open the official Ko-fi interactive iframe container system smoothly
-        if(typeof kofiWidgetOverlay !== 'undefined') {
-            // This triggers Ko-fi's secure built-in lightbox slide-out pane overlay animation perfectly
-            const kofiBallElement = document.querySelector('.kofi-button-wrapper img') || 
-                                    document.querySelector('[class*="floating-chat"]');
-            
-            // Look for the hidden structural engine launch element and programmatically trigger it
-            const launchTarget = document.getElementById('kofi-widget-overlay') || kofiBallElement;
-            
-            // Programmatically call the official slide opening lifecycle step
-            const iframeContainer = document.querySelector('.kofi-iframe-container');
-            if(iframeContainer) {
-                iframeContainer.style.display = 'block';
-            } else {
-                // If the initialization isn't parsed yet, call the fallback overlay framework open routine
-                const kofiIframeInstance = document.querySelector('iframe[src*="ko-fi.com"]');
-                if (kofiIframeInstance) {
-                     window.parent.postMessage('kofi_widget_open', '*');
-                }
-            }
-            
-            // Ultimate clean integration: simply simulate clicking the active secure connection channel
-            const clickTrigger = document.querySelector('.kofi-button-wrapper') || 
-                                 document.getElementById('kofi-widget-overlay');
-            if(clickTrigger) {
-                // Create a synthetic interaction event to securely pass origin checks safely
-                const clickEvent = new MouseEvent('click', { view: window, bubbles: true, cancelable: true });
-                clickTrigger.dispatchEvent(clickEvent);
-            }
-        }
+        // Sends the official secure launch signal to slide open the donation pane overlay smoothly
+        kofiIframe.contentWindow.postMessage(JSON.stringify({ method: 'open' }), '*');
+        kofiIframe.contentWindow.postMessage('kofi_widget_open', '*');
     }
-        }
+}
 
         // =========================================================
         // ✨ DYNAMIC SIDEBAR LIST PARSING DATA ✨
