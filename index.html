@@ -323,7 +323,7 @@
                 </div>
             </div>
 
-            <!-- List of Doners -->
+            <!-- List of Donors -->
             <div class="card List-of-Doners" style="opacity: 1; transform: none;"> 
                 <h2>Wall of Koi</h2>
                 <div class="meta" style="margin-bottom: 15px;">Recent supporters!</div>
@@ -434,19 +434,6 @@ const recentDonations = [
             donationContainer.appendChild(li);
         });
         // =========================================================
-
-        const bakiCovers = [
-            "https://cdn.imgchest.com/files/82b863c637f2.jpg",
-            "https://cdn.imgchest.com/files/9936d9292fe3.jpg",
-            "https://cdn.imgchest.com/files/7a9ad50c0e20.jpg",
-            "https://cdn.imgchest.com/files/1d56d8df18c6.jpg"
-        ];
-
-        const bakiTargetImage = document.getElementById('baki-oneshots-cover');
-        if (bakiTargetImage) {
-            const randomBakiIndex = Math.floor(Math.random() * bakiCovers.length);
-            bakiTargetImage.src = bakiCovers[randomBakiIndex];
-        }
 
         document.addEventListener("DOMContentLoaded", () => {
             const cards = document.querySelectorAll('.card:not([style*="opacity: 1"])');
