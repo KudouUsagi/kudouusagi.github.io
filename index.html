@@ -323,16 +323,7 @@
                 </div>
             </div>
 
-            <!-- List of Donors -->
-            <div class="card List-of-Doners" style="opacity: 1; transform: none;"> 
-                <h2>Wall of Koi</h2>
-                <div class="meta" style="margin-bottom: 15px;">Recent supporters!</div>
-                
-                <ul class="supporter-list" id="dynamic-donations"></ul>
-            </div>
-        </aside>
 
-    </div>
 
     <script>
         // =========================================================
@@ -352,87 +343,9 @@
         }
 
 
-const recentDonations = [
-                {
-        name: "Minedor(The GOAT Redoing Chapters of Son of Ogre!)",
-        message: "Keep at it! Great work on Gaia & Sikorsky, excited for future chapters.",
-        monstersFunded: 15,
-        amount: "$15.00",
-        reply: "HUGE LOVE! Thank you so very much! Will do the best of my abilities!"
-    },
-            {
-        name: "Jonty",
-        message: "I appreciate the OPM translations. :)",
-        monstersFunded: 40,
-        amount: "$40.00",
-        reply: "Holy moly. Thank you SO MUCH BROTHER!"
-    },
-        {
-        name: "Jose",
-        message: "They're too consistent 🙌",
-        monstersFunded: 10,
-        amount: "$10.00",
-        reply: "THANK YOU SM!"
-    },
-    {
-        name: "Mangadot",
-        message: "Donation from Mangadot.net For the awesome OPM <3",
-        monstersFunded: 20,
-        amount: "$20.00",
-        reply: "HUGE love Thank sm!(Also thank you for teaching me the ways of crypto)",
-    },
-    {
-        name: "Kana K",
-        message: "I just found u today and thank you so for your effort on the Baki Gaiden Gaia and Sikorsky manga 🙇🏻‍♀️💕",
-        monstersFunded: 6,
-        amount: "$6.00",
-        reply: "Thank you sm <3, Happy to provide Gaia & Sikorsky :D!"
-    },
-    {
-        name: "Anonymous",
-        message: "Thanks for the scans",
-        monstersFunded: 3,
-        amount: "$3.00",
-        reply: "Omg thank you sm <3 Happy to help!"
-    },
-    {
-        name: "Jose",
-        message: "Preciate the kenichi, mah boi",
-        monstersFunded: 10,
-        amount: "$10.00",
-        reply: "OMG THANK YOU!! <3"
-    },
-    {
-        name: "Jokuman357",
-        message: "I wait upon you on the top of the Dragon Gate.",
-        monstersFunded: 20,
-        amount: "$20.00",
-        reply: "Actually shocked holy crap thank you <3"
-    }
-];
 
-        const donationContainer = document.getElementById('dynamic-donations');
-        recentDonations.forEach(donor => {
-            let li = document.createElement('li');
-            
-            // Format the message if it exists
-            let msgHTML = donor.message ? `<div class="supporter-msg">"${donor.message}"</div>` : '';
-            
-            // Format the reply if it exists
-            let replyHTML = donor.reply ? `<div class="supporter-reply">↳ <strong>Reply:</strong> ${donor.reply}</div>` : '';
 
-            // Apply the glowing highlight-amount class to the entire action div
-            li.innerHTML = `
-                <span class="supporter-name">${donor.name}</span>
-                ${msgHTML}
-                <div class="supporter-action highlight-amount">
-                    Funded ${donor.monstersFunded} Monsters! - ${donor.amount}
-                </div>
-                ${replyHTML}
-            `;
-            
-            donationContainer.appendChild(li);
-        });
+
         // =========================================================
 
         document.addEventListener("DOMContentLoaded", () => {
