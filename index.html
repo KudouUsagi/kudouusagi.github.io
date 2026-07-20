@@ -65,7 +65,7 @@
             width: 100%;
             flex-grow: 1;
         }
-        /* --- SIDEBAR & OFFICIAL WIDGET --- */
+        /* --- SIDEBAR & CUSTOM DROPDOWN WIDGET --- */
         .sidebar {
             width: 320px; 
             flex-shrink: 0;
@@ -75,27 +75,83 @@
             flex-direction: column;
             gap: 1.5rem;
         }
-        .official-widget-container {
+        .custom-widget-container {
             width: 100%;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--card-bg);
-            backdrop-filter: blur(4px);
+            flex-direction: column;
+        }
+        /* Glassy Donate Button */
+        .kofi-toggle-btn {
+            width: 100%;
+            background-color: rgba(30, 30, 38, 0.65); 
+            backdrop-filter: blur(8px);
+            color: #ffffff;
+            padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.25); 
             border-radius: 12px;
-            padding: 1.2rem;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-sizing: border-box;
+            text-align: left;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
         }
-        .official-widget-container:hover {
+        .kofi-toggle-btn:hover {
+            background-color: rgba(126, 87, 194, 0.2); 
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 6px 20px rgba(126, 87, 194, 0.3);
+        }
+        .kofi-toggle-btn.open {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom-color: transparent;
+            background-color: rgba(126, 87, 194, 0.15);
+        }
+        .kofi-icon-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toggle-arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        .kofi-toggle-btn.open .toggle-arrow {
+            transform: rotate(180deg);
+        }
+        /* Expanding Dropdown Container holding the Official Code */
+        .kofi-panel-wrapper {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.4s ease;
+            background-color: rgba(30, 30, 38, 0.95); 
+            backdrop-filter: blur(8px);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            border: 1px solid transparent;
+            border-top: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .kofi-panel-wrapper.open {
+            max-height: 670px; 
+            opacity: 1;
             border-color: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
-        /* Override official script inline padding alignments safely */
-        .official-widget-container img.kofi-img {
+        #kofi-iframe {
+            width: 100%;
+            height: 650px;
+            border: none;
             display: block;
-            margin: 0 auto;
-            max-width: 100%;
+            border-bottom-left-radius: 11px;
+            border-bottom-right-radius: 11px;
         }
         /* --- SIDEBAR LIST --- */
         .sidebar-list-container {
@@ -221,7 +277,7 @@
             
             <div class="grid" id="main-grid">
                 
-                <!-- Active Content Cards -->
+                <!-- Active Content Card -->
                 <div class="card">
                     <img class="cover-img" src="https://via.placeholder.com/200x300" alt="Card Image Asset">
                     <h2>Koisuru Boukun</h2>
@@ -253,18 +309,27 @@
             </footer>
         </div>
 
-      <!-- RIGHT SIDE: Sidebar -->
+        <!-- RIGHT SIDE: Sidebar -->
         <aside class="sidebar">
 
-            <!-- Official Inline Ko-fi Button Link -->
-            <div class="official-widget-container" style="padding: 0; border: none; background: transparent; box-shadow: none;">
-                <a href="https://ko-fi.com/kudouusagi" target="_blank" style="display: block; width: 100%; text-decoration: none;">
-                    <img height="46" style="border:0px;height:46px;display:block;margin:0 auto;" src="https://storage.ko-fi.com/cdn/kofi5.png?v=6" border="0" alt="Buy Me a Coffee at ko-fi.com" />
-                </a>
+            <!-- Your Original Glassy Expandable Button UI Component -->
+            <div class="custom-widget-container">
+                <button class="kofi-toggle-btn" id="kofi-toggle" onclick="toggleWidget()">
+                    <div class="kofi-icon-group">
+                        <span>☕</span>
+                        <span>Support My Work</span>
+                    </div>
+                    <span class="toggle-arrow">▼</span>
+                </button>
+                
+                <!-- Dropdown panel embedding the official Ko-fi widget context natively -->
+                <div class="kofi-panel-wrapper" id="kofi-dropdown">
+                    <iframe id="kofi-iframe" src="https://ko-fi.com/kudouusagi/?hidefeed=true&widget=true&embed=true&preview=true" title="kudouusagi"></iframe>
+                </div>
             </div>
 
             <!-- Dynamic Stream / Activity List Container Card -->
-            <div class="card sidebar-list-container" style="opacity: 1; transform: none; margin-top: 0.5rem;"> 
+            <div class="card sidebar-list-container" style="opacity: 1; transform: none;"> 
                 <h2>Recent Supporters</h2>
                 <div class="meta" style="margin-bottom: 15px;">Latest automated community updates</div>
                 
@@ -277,6 +342,17 @@
     </div>
 
     <script>
+        // =========================================================
+        // ✨ WIDGET TOGGLE LOGIC ✨
+        // =========================================================
+        function toggleWidget() {
+            const btn = document.getElementById('kofi-toggle');
+            const dropdown = document.getElementById('kofi-dropdown');
+            
+            btn.classList.toggle('open');
+            dropdown.classList.toggle('open');
+        }
+
         // =========================================================
         // ✨ DYNAMIC SIDEBAR LIST PARSING DATA ✨
         // =========================================================
